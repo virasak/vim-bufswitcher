@@ -30,7 +30,7 @@ function s:openWin()
     let prevbufnr = bufnr('%')
     exe 'silent! e ' . g:bufswitcher_name
     let b:bufnr = prevbufnr
-    set filetype=bufferlist
+    set filetype=bufswitcher
 
     " open selected buffer
     nmap <silent> <buffer> <CR>          :call <SID>loadSelectedBuffer()<CR>
