@@ -41,6 +41,8 @@ function s:openWin()
     nmap <silent> <buffer> q             :call <SID>closeWin()<CR>
     nmap <silent> <buffer> <Tab>         :call <SID>closeWin()<CR>
 
+    au  BufLeave <buffer>   :cal <SID>closeWin()<CR>
+
     call s:updateBufferList()
 endfunction
 
