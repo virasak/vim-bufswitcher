@@ -7,7 +7,7 @@ endif
 
 let g:bufswitcher_loaded = 1
 
-let g:bufswitcher_name = 'Buffer Switcher'
+let g:bufswitcher_name = 'BufferSwitcher'
 let g:noname_label = 'No Name'
 
 if has('win32') || has('win64')
@@ -40,8 +40,6 @@ function s:openWin()
     " close BufferSwitcher buffer
     nmap <silent> <buffer> q             :call <SID>closeWin()<CR>
     nmap <silent> <buffer> <Tab>         :call <SID>closeWin()<CR>
-
-    au  BufLeave <buffer>   :cal <SID>closeWin()<CR>
 
     call s:updateBufferList()
 endfunction
