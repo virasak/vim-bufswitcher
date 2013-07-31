@@ -14,21 +14,21 @@ else
   let s:pathsp = '/'
 endif
 
-function s:findListedBuffers()
-    return filter(range(1, bufnr('$')), 'buflisted(v:val)')
+function s:strrpad(str, n)
+    return a:str . repeat(' ', a:n - len(a:str))
 endfunction
 
 function s:openWin()
-    let buflist = s:findListedBuffers()
-    if len(buflist) <= 1
-        echo 'No! You have only one buffer.'
-        return
-    endif
-
     let prevbufnr = bufnr('%')
-    silent! enew
-    let b:bufnr = prevbufnr
+    exe 'silent! e ' . 'BUFSWITCHER'
     set filetype=bufswitcher
+
+    if bufnr('%') == prevbufnr
+        silent! bdelete
+        return
+    end
+
+    let b:bufnr = prevbufnr
 
     " open selected buffer
     nmap <silent> <buffer> <CR>          :call <SID>loadSelectedBuffer()<CR>
@@ -37,6 +37,7 @@ function s:openWin()
 
     " close BufferSwitcher buffer
     nmap <silent> <buffer> q             :call <SID>closeWin()<CR>
+    nmap <silent> <buffer> <ESC>         :call <SID>closeWin()<CR>
     nmap <silent> <buffer> <Tab>         :call <SID>closeWin()<CR>
 
     call s:updateBufferList()
@@ -62,7 +63,7 @@ function s:updateBufferList()
   setlocal modifiable
   exe "%delete _"
 
-  let b:bufnumberlist = s:findListedBuffers()
+  let b:bufnumberlist = filter(range(1, bufnr('$')), 'buflisted(v:val)')
   let max_length = &ts
 
   for i in b:bufnumberlist
@@ -74,7 +75,7 @@ function s:updateBufferList()
     let display_length = strlen(disp_name)
     let max_length = display_length > max_length ? display_length : max_length
 
-    silent put = disp_name . buf_name
+    silent put = disp_name . s:strrpad('#'.i, 5) .buf_name
   endfor
   " update tabstop to better alignment
   exe 'setlocal ts=' . (max_length + 4)
