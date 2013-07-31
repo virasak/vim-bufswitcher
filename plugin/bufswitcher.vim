@@ -66,20 +66,14 @@ function s:loadSelectedBuffer()
     call s:closeWin()
 endfunction
 
-function s:listedBuffers()
-    let result = []
-    for bufnr in b:bufnr_list
-        let value = {}
-        let value.bufnr = bufnr
-        let value.buf_name = bufname(bufnr)
-        let value.opened = bufwinnr(bufnr) == -1 ? ' ' : '*'
-        let value.modified = getbufvar(bufnr, '&modified') ? '+' : ' '
-        let value.file_name = empty(value.buf_name) ? g:noname_label : strpart(value.buf_name, strridx(value.buf_name, s:pathsp) + 1)
-
-        call add(result, value)
-    endfor
-
-    return result
+function s:get_bufinfo(bufnr)
+    let bufnr = a:bufnr
+    let value = {}
+    let value.buf_name = bufname(bufnr)
+    let value.opened = bufwinnr(bufnr) == -1 ? ' ' : '*'
+    let value.modified = getbufvar(bufnr, '&modified') ? '+' : ' '
+    let value.file_name = empty(value.buf_name) ? g:noname_label : strpart(value.buf_name, strridx(value.buf_name, s:pathsp) + 1)
+    return value
 endfunction
 
 function s:updateBufferList()
@@ -87,12 +81,13 @@ function s:updateBufferList()
     exe "%delete _"
 
     let max_length = &ts
-    for bufobj in s:listedBuffers()
+    for bufnr in b:bufnr_list
+        let bufobj = s:get_bufinfo(bufnr)
         let disp_name = bufobj.opened . bufobj.modified . bufobj.file_name . "\t"
         let display_length = strlen(disp_name)
         let max_length = display_length > max_length ? display_length : max_length
 
-        silent put = disp_name . s:strrpad('#'.bufobj.bufnr, 5) . bufobj.buf_name
+        silent put = disp_name . s:strrpad('#'.bufnr, 5) . bufobj.buf_name
 
     endfor
 
