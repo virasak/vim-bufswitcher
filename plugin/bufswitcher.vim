@@ -6,8 +6,6 @@ if exists('g:bufswitcher_loaded')
 endif
 
 let g:bufswitcher_loaded = 1
-
-let g:bufswitcher_name = 'BufferSwitcher'
 let g:noname_label = 'No Name'
 
 if has('win32') || has('win64')
@@ -28,7 +26,7 @@ function s:openWin()
     endif
 
     let prevbufnr = bufnr('%')
-    exe 'silent! e ' . g:bufswitcher_name
+    silent! enew
     let b:bufnr = prevbufnr
     set filetype=bufswitcher
 
@@ -45,7 +43,7 @@ function s:openWin()
 endfunction
 
 function s:closeWin()
-    if bufexists(b:bufnr) && bufname(b:bufnr) != g:bufswitcher_name
+    if bufexists(b:bufnr)
         exe b:bufnr . 'buffer'
     else
         exe 'enew'
@@ -79,7 +77,7 @@ function s:updateBufferList()
     silent put = disp_name . buf_name
   endfor
   " update tabstop to better alignment
-  exe 'setlocal ts=' . max_length
+  exe 'setlocal ts=' . (max_length + 4)
 
   " go to the first line and delete this empty line without destroy 'unnamed' register
   0 | delete _
