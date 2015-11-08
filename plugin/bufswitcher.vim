@@ -100,8 +100,6 @@ endfunction
 
 command BufSwitcherOpen :call s:openWin()
 
-nnoremap <silent> <Tab> :BufSwitcherOpen<CR>
-
 " Restore cpo.
 let &cpo = s:save_cpo
 unlet s:save_cpo
